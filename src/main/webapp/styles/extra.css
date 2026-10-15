@@ -1,0 +1,62 @@
+/* Estilos de login, crear cuenta y menú (se carga después de styles.css) */
+
+.auth-card {
+    max-width: 420px;
+}
+
+.mensaje-error {
+    color: #b30000;
+    font-weight: bold;
+}
+
+.mensaje-ok {
+    color: #1b7a34;
+    font-weight: bold;
+}
+
+.enlace-secundario {
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+    color: #800000;
+}
+
+.menu-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    border-top: 5px solid #800000;
+    padding: 1.2rem;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.menu-categoria {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b30000;
+}
+
+.menu-item h3 {
+    margin: 0.4rem 0;
+}
+
+.menu-item p {
+    flex: 1;
+    margin: 0 0 1rem;
+    color: #555;
+}
+
+.menu-precio {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #800000;
+}

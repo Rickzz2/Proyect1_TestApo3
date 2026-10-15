@@ -1,16 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
-public class Cliente {
+import java.io.Serializable;
+
+public class Cliente implements Serializable {
     private int idCliente;
     private String nombre;
     private String apellidos;
     private String correo;
     private String telefono;
     private String direccion;
+    private String rol;
 
     public Cliente() {
     }
@@ -41,4 +40,11 @@ public class Cliente {
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
+
+    public boolean esAdmin() {
+        return "admin".equals(rol);
+    }
 }
