@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RICKZ - Menú</title>
     <link rel="stylesheet" type="text/css" href="styles/styles.css?v=2">
-    <link rel="stylesheet" type="text/css" href="styles/extra.css">
+    <link rel="stylesheet" type="text/css" href="styles/extra.css?v=2">
 </head>
 <body>
     <%@include file="lib/header.jsp" %>
@@ -42,10 +42,17 @@
                     continue;
                 } %>
             <div class="menu-item">
-                <span class="menu-categoria"><%= Texto.esc(p.getNombreCategoria()) %></span>
-                <h3><%= Texto.esc(p.getNombre()) %></h3>
-                <p><%= Texto.esc(p.getDescripcion()) %></p>
-                <div class="menu-precio">$ <%= String.format(Locale.US, "%.2f", p.getPrecio()) %></div>
+                <div class="menu-img">
+                    <% if (p.tieneImagen()) { %>
+                    <img src="<%= Texto.esc(p.getImagenUrl().trim()) %>" alt="<%= Texto.esc(p.getNombre()) %>" loading="lazy" onerror="this.remove()">
+                    <% } %>
+                </div>
+                <div class="menu-body">
+                    <span class="menu-categoria"><%= Texto.esc(p.getNombreCategoria()) %></span>
+                    <h3><%= Texto.esc(p.getNombre()) %></h3>
+                    <p><%= Texto.esc(p.getDescripcion()) %></p>
+                    <div class="menu-precio">S/. <%= String.format(Locale.US, "%.2f", p.getPrecio()) %></div>
+                </div>
             </div>
             <% } %>
         </div>

@@ -69,6 +69,8 @@ public class ServletProductos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String acion = request.getParameter ("accion");
         processRequest(request, response);
     }
 

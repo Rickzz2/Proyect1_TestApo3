@@ -9,6 +9,7 @@ public class Producto {
     private double precio;
     private int cantidadStock;
     private boolean disponibilidad;
+    private String imagenUrl;
 
     public Producto() {
     }
@@ -45,4 +46,11 @@ public class Producto {
 
     public boolean isDisponibilidad() { return disponibilidad; }
     public void setDisponibilidad(boolean disponibilidad) { this.disponibilidad = disponibilidad; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+
+    public boolean tieneImagen() {
+        return imagenUrl != null && !imagenUrl.trim().isEmpty();
+    }
 }

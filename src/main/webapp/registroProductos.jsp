@@ -23,6 +23,8 @@
         String error = request.getParameter("error");
         if ("datos".equals(error)) {
             mensajeError = "El precio o el stock no son válidos. Escribe solo números.";
+        } else if ("imagen".equals(error)) {
+            mensajeError = "La imagen debe ser un archivo dentro de la carpeta images (por ejemplo images/ceviche.jpg, sin espacios) o un enlace que empiece con https://";
         } else if ("bd".equals(error)) {
             mensajeError = "No se pudo guardar el producto. Revisa que SQL Server esté encendido y que la clave en db.properties sea correcta.";
         }
@@ -62,6 +64,10 @@
             <div class="form-group">
                 <label>Cantidad en stock:</label>
                 <input type="number" min="0" name="cantidadStock" required>
+            </div>
+            <div class="form-group">
+                <label>Imagen (opcional): archivo de la carpeta images o enlace https</label>
+                <input type="text" name="imagenUrl" maxlength="255" placeholder="images/ceviche.jpg">
             </div>
             <button type="submit" class="btn">Guardar Producto</button>
         </form>

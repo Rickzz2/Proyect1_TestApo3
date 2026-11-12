@@ -7,6 +7,18 @@
         return;
     }
 
+    // Imagen opcional: un archivo de la carpeta images/ o un enlace https://
+    String imagen = request.getParameter("imagenUrl");
+    imagen = (imagen == null) ? "" : imagen.trim();
+    if (!imagen.isEmpty()) {
+        boolean local = imagen.matches("images/[A-Za-z0-9_./-]+") && !imagen.contains("..");
+        boolean externa = imagen.matches("https://[^\\s\"'<>]+");
+        if ((!local && !externa) || imagen.length() > 255) {
+            response.sendRedirect("registroProductos.jsp?error=imagen");
+            return;
+        }
+    }
+
     Producto p = new Producto();
     try {
         p.setNombre(request.getParameter("nombre").trim());
@@ -15,6 +27,7 @@
         p.setPrecio(Double.parseDouble(request.getParameter("precio")));
         p.setCantidadStock(Integer.parseInt(request.getParameter("cantidadStock")));
         p.setDisponibilidad(p.getCantidadStock() > 0);
+        p.setImagenUrl(imagen.isEmpty() ? null : imagen);
     } catch (NumberFormatException ex) {
         response.sendRedirect("registroProductos.jsp?error=datos");
         return;
