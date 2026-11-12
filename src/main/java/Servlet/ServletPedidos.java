@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import modelo.DatosEntrega;
 import modelo.Cliente;
 import modelo.Producto;
 
@@ -44,8 +45,12 @@ public class ServletPedidos extends HttpServlet {
                     cantidades.put(p.getIdProducto(), cantidad);
                 }
             }
+            DatosEntrega entrega = new DatosEntrega(
+                    request.getParameter("nombreReceptor"), request.getParameter("direccionEntrega"),
+                    request.getParameter("distrito"), request.getParameter("referencia"),
+                    request.getParameter("telefonoContacto"));
             int idPedido = new GestionarVenta().registrar(
-                    usuario.getIdCliente(), request.getParameter("tipoPedido"), cantidades);
+                    usuario.getIdCliente(), request.getParameter("tipoPedido"), cantidades, entrega);
             sesion.setAttribute("msgOk", "¡Pedido #" + idPedido + " enviado! Lo estamos preparando.");
             response.sendRedirect("pedido.jsp#mis-pedidos");
         } catch (GestionException ex) {

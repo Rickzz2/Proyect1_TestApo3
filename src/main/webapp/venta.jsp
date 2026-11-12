@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RICKZ - Ventas</title>
     <link rel="stylesheet" type="text/css" href="styles/styles.css?v=2">
-    <link rel="stylesheet" type="text/css" href="styles/extra.css?v=3">
+    <link rel="stylesheet" type="text/css" href="styles/extra.css?v=5">
 </head>
 <body>
     <%@include file="lib/header.jsp" %>
@@ -30,6 +30,11 @@
         // Si el servlet devolvió un error, se conserva lo que el usuario había elegido
         String clienteElegido = request.getParameter("idCliente");
         String tipoElegido = request.getParameter("tipoPedido");
+        String vNombre = request.getParameter("nombreReceptor") == null ? "" : request.getParameter("nombreReceptor");
+        String vTelefono = request.getParameter("telefonoContacto") == null ? "" : request.getParameter("telefonoContacto");
+        String vDireccion = request.getParameter("direccionEntrega") == null ? "" : request.getParameter("direccionEntrega");
+        String vDistrito = request.getParameter("distrito") == null ? "" : request.getParameter("distrito");
+        String vReferencia = request.getParameter("referencia") == null ? "" : request.getParameter("referencia");
     %>
     <div class="container container-ancho">
         <h2>Registrar venta</h2>
@@ -64,6 +69,40 @@
                         <option value="Llevar" <%= "Llevar".equals(tipoElegido) ? "selected" : "" %>>Para llevar</option>
                         <option value="Domicilio" <%= "Domicilio".equals(tipoElegido) ? "selected" : "" %>>Domicilio</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="entrega" id="datosEntrega" hidden>
+                <h3>Datos de entrega</h3>
+                <p class="nota-entrega">Necesitamos estos datos para llevarte el pedido.</p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombreReceptor">¿Quién recibe? *</label>
+                        <input type="text" id="nombreReceptor" name="nombreReceptor" maxlength="150"
+                               value="<%= Texto.esc(vNombre) %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefonoContacto">Teléfono de contacto *</label>
+                        <input type="tel" id="telefonoContacto" name="telefonoContacto" maxlength="20"
+                               value="<%= Texto.esc(vTelefono) %>">
+                    </div>
+                    <div class="form-group ancho-completo">
+                        <label for="direccionEntrega">Dirección de entrega *</label>
+                        <input type="text" id="direccionEntrega" name="direccionEntrega" maxlength="250"
+                               placeholder="Calle / avenida, número, piso o departamento"
+                               value="<%= Texto.esc(vDireccion) %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="distrito">Distrito / barrio *</label>
+                        <input type="text" id="distrito" name="distrito" maxlength="100"
+                               value="<%= Texto.esc(vDistrito) %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="referencia">Referencia (opcional)</label>
+                        <input type="text" id="referencia" name="referencia" maxlength="250"
+                               placeholder="Ej: frente al parque, casa de reja negra"
+                               value="<%= Texto.esc(vReferencia) %>">
+                    </div>
                 </div>
             </div>
 
@@ -130,7 +169,15 @@
                         <td><%= v.getIdVenta() %></td>
                         <td><%= Texto.esc(v.getFecha()) %></td>
                         <td><%= Texto.esc(v.getNombreCliente()) %></td>
-                        <td><%= Texto.esc(v.getTipoPedido()) %></td>
+                        <td><%= Texto.esc(v.getTipoPedido()) %>
+                            <% if (v.esDomicilio() && v.getDireccionEntrega() != null) { %>
+                            <span class="dato-entrega">
+                                <%= Texto.esc(v.getNombreReceptor()) %> · <%= Texto.esc(v.getTelefonoContacto()) %><br>
+                                <%= Texto.esc(v.getDireccionEntrega()) %>, <%= Texto.esc(v.getDistrito()) %>
+                                <% if (v.getReferencia() != null) { %><br>Ref: <%= Texto.esc(v.getReferencia()) %><% } %>
+                            </span>
+                            <% } %>
+                        </td>
                         <td><%= Texto.esc(v.getEstado()) %></td>
                         <td>
                             <% for (DetalleVenta d : v.getDetalles()) { %>
@@ -147,6 +194,21 @@
     </div>
 
     <script>
+        (function () {
+            var tipo = document.querySelector('select[name="tipoPedido"]');
+            var caja = document.getElementById('datosEntrega');
+            if (!tipo || !caja) { return; }
+            var obligatorios = ['nombreReceptor', 'telefonoContacto', 'direccionEntrega', 'distrito'];
+            function actualizar() {
+                var domicilio = tipo.value === 'Domicilio';
+                caja.hidden = !domicilio;
+                obligatorios.forEach(function (id) {
+                    document.getElementById(id).required = domicilio;
+                });
+            }
+            tipo.addEventListener('change', actualizar);
+            actualizar();
+        })();
         (function () {
             var campos = document.querySelectorAll('input.campo-cantidad');
             var total = document.getElementById('totalVenta');

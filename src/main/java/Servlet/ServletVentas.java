@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import modelo.DatosEntrega;
 import modelo.Producto;
 
 // Recibe el formulario de venta.jsp: un cliente + varias cantidades (cant_<idProducto>).
@@ -36,7 +37,11 @@ public class ServletVentas extends HttpServlet {
                     cantidades.put(p.getIdProducto(), cantidad);
                 }
             }
-            int idVenta = new GestionarVenta().registrar(idCliente, request.getParameter("tipoPedido"), cantidades);
+            DatosEntrega entrega = new DatosEntrega(
+                    request.getParameter("nombreReceptor"), request.getParameter("direccionEntrega"),
+                    request.getParameter("distrito"), request.getParameter("referencia"),
+                    request.getParameter("telefonoContacto"));
+            int idVenta = new GestionarVenta().registrar(idCliente, request.getParameter("tipoPedido"), cantidades, entrega);
             request.getSession().setAttribute("msgOk", "Venta #" + idVenta + " registrada correctamente.");
             response.sendRedirect("venta.jsp");
         } catch (GestionException ex) {

@@ -13,6 +13,11 @@ public class Venta {
     private String estado;
     private String tipoPedido;
     private double total;
+    private String nombreReceptor;
+    private String direccionEntrega;
+    private String distrito;
+    private String referencia;
+    private String telefonoContacto;
     private final List<DetalleVenta> detalles = new ArrayList<>();
 
     public Venta() {
@@ -38,6 +43,23 @@ public class Venta {
 
     public double getTotal() { return total; }
     public void setTotal(double total) { this.total = total; }
+
+    public String getNombreReceptor() { return nombreReceptor; }
+    public void setNombreReceptor(String nombreReceptor) { this.nombreReceptor = nombreReceptor; }
+
+    public String getDireccionEntrega() { return direccionEntrega; }
+    public void setDireccionEntrega(String direccionEntrega) { this.direccionEntrega = direccionEntrega; }
+
+    public String getDistrito() { return distrito; }
+    public void setDistrito(String distrito) { this.distrito = distrito; }
+
+    public String getReferencia() { return referencia; }
+    public void setReferencia(String referencia) { this.referencia = referencia; }
+
+    public String getTelefonoContacto() { return telefonoContacto; }
+    public void setTelefonoContacto(String telefonoContacto) { this.telefonoContacto = telefonoContacto; }
+
+    public boolean esDomicilio() { return "Domicilio".equals(tipoPedido); }
 
     public List<DetalleVenta> getDetalles() { return detalles; }
 }

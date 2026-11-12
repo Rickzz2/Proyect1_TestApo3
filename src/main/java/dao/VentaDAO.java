@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import modelo.DatosEntrega;
 import modelo.DetalleVenta;
 import modelo.Venta;
 
@@ -21,13 +22,13 @@ public class VentaDAO {
     // Registra la venta completa en UNA transacción: si algo falla (por ejemplo
     // no hay stock de un plato) no se guarda nada y el stock queda intacto.
     // items: id_producto -> cantidad. Devuelve el id de la venta creada.
-    public int registrar(int idCliente, String tipoPedido, Map<Integer, Integer> items)
+    public int registrar(int idCliente, String tipoPedido, Map<Integer, Integer> items, DatosEntrega entrega)
             throws SQLException, GestionException {
         try (Connection cn = Conexion.getConexion()) {
             cn.setAutoCommit(false);
             try {
                 int idRestaurante = obtenerRestaurante(cn);
-                int idPedido = crearPedido(cn, idCliente, idRestaurante, tipoPedido);
+                int idPedido = crearPedido(cn, idCliente, idRestaurante, tipoPedido, entrega);
                 BigDecimal total = BigDecimal.ZERO;
                 for (Map.Entry<Integer, Integer> e : items.entrySet()) {
                     total = total.add(agregarLinea(cn, idPedido, e.getKey(), e.getValue()));
@@ -67,18 +68,32 @@ public class VentaDAO {
         }
     }
 
-    private int crearPedido(Connection cn, int idCliente, int idRestaurante, String tipo) throws SQLException {
-        String sql = "INSERT INTO pedido (id_cliente, id_restaurante, tipo_pedido, total) VALUES (?, ?, ?, 0)";
+    private int crearPedido(Connection cn, int idCliente, int idRestaurante, String tipo, DatosEntrega entrega)
+            throws SQLException {
+        String sql = "INSERT INTO pedido (id_cliente, id_restaurante, tipo_pedido, total, "
+                + "nombre_receptor, direccion_entrega, distrito, referencia, telefono_contacto) "
+                + "VALUES (?, ?, ?, 0, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, idCliente);
             ps.setInt(2, idRestaurante);
             ps.setString(3, tipo);
+            // Los datos de entrega solo se guardan en pedidos a domicilio
+            boolean domicilio = "Domicilio".equals(tipo) && entrega != null;
+            ps.setString(4, domicilio ? vacioANulo(entrega.getNombreReceptor()) : null);
+            ps.setString(5, domicilio ? vacioANulo(entrega.getDireccion()) : null);
+            ps.setString(6, domicilio ? vacioANulo(entrega.getDistrito()) : null);
+            ps.setString(7, domicilio ? vacioANulo(entrega.getReferencia()) : null);
+            ps.setString(8, domicilio ? vacioANulo(entrega.getTelefono()) : null);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 keys.next();
                 return keys.getInt(1);
             }
         }
+    }
+
+    private static String vacioANulo(String s) {
+        return (s == null || s.trim().isEmpty()) ? null : s.trim();
     }
 
     // Lee el precio y el stock REALES desde la BD (no se confía en lo que mande
@@ -139,7 +154,8 @@ public class VentaDAO {
     private List<Venta> listar(Integer idCliente) throws SQLException {
         Map<Integer, Venta> porId = new LinkedHashMap<>();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String sql = "SELECT TOP 100 p.id_pedido, p.id_cliente, c.nombre, c.apellidos, p.fecha, p.estado, p.tipo_pedido, p.total "
+        String sql = "SELECT TOP 100 p.id_pedido, p.id_cliente, c.nombre, c.apellidos, p.fecha, p.estado, p.tipo_pedido, p.total, "
+                + "p.nombre_receptor, p.direccion_entrega, p.distrito, p.referencia, p.telefono_contacto "
                 + "FROM pedido p JOIN cliente c ON c.id_cliente = p.id_cliente "
                 + (idCliente == null ? "" : "WHERE p.id_cliente = ? ")
                 + "ORDER BY p.id_pedido DESC";
@@ -158,6 +174,11 @@ public class VentaDAO {
                 v.setEstado(rs.getString("estado"));
                 v.setTipoPedido(rs.getString("tipo_pedido"));
                 v.setTotal(rs.getBigDecimal("total").doubleValue());
+                v.setNombreReceptor(rs.getString("nombre_receptor"));
+                v.setDireccionEntrega(rs.getString("direccion_entrega"));
+                v.setDistrito(rs.getString("distrito"));
+                v.setReferencia(rs.getString("referencia"));
+                v.setTelefonoContacto(rs.getString("telefono_contacto"));
                 porId.put(v.getIdVenta(), v);
             }
             rs.close();
