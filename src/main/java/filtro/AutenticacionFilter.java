@@ -23,8 +23,8 @@ public class AutenticacionFilter implements Filter {
 
     // Páginas que solo puede ver el admin (además de todo lo que empiece con /admin)
     private static final Set<String> SOLO_ADMIN = Set.of(
-            "/registroUsuarios.jsp", "/registroProductos.jsp",
-            "/guardarCliente.jsp", "/guardarProducto.jsp");
+            "/addUsers.jsp", "/listUsers.jsp", "/addItems.jsp", "/listItems.jsp", "/venta.jsp",
+            "/ServletClientes", "/ServletProductos", "/ServletVentas");
 
     // Carpetas de recursos (estilos, imágenes, scripts): siempre accesibles
     private static final String[] RECURSOS = {"/styles/", "/images/", "/scripts/"};

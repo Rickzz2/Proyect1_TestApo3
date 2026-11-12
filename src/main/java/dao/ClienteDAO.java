@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Cliente;
@@ -16,23 +17,64 @@ public class ClienteDAO {
 
     // El rol no se manda aquí: la base de datos le pone 'cliente' por defecto.
     // Así nadie puede crearse una cuenta de admin desde un formulario.
-    public void insertar(Cliente c, String passwordPlano) throws SQLException {
-        String sql = "INSERT INTO cliente (nombre, apellidos, correo, password_hash, telefono, direccion) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+    // Si el cliente no trae código (registro público), se genera uno automático.
+    // Devuelve el id que le asignó SQL Server.
+    public int insertar(Cliente c, String passwordPlano) throws SQLException {
+        String sql = "INSERT INTO cliente (codigo, nombre, apellidos, correo, password_hash, telefono, direccion) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        if (c.getCodigo() == null || c.getCodigo().trim().isEmpty()) {
+            c.setCodigo("USR-" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        }
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, c.getCodigo());
+            ps.setString(2, c.getNombre());
+            ps.setString(3, c.getApellidos());
+            ps.setString(4, c.getCorreo());
+            ps.setString(5, hashPassword(passwordPlano));
+            ps.setString(6, c.getTelefono());
+            ps.setString(7, c.getDireccion());
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                return keys.next() ? keys.getInt(1) : 0;
+            }
+        }
+    }
+
+    // Si passwordNueva viene vacía, la contraseña actual no se toca.
+    // El rol tampoco se modifica desde aquí.
+    public void actualizar(Cliente c, String passwordNueva) throws SQLException {
+        boolean cambiaClave = passwordNueva != null && !passwordNueva.isEmpty();
+        String sql = "UPDATE cliente SET codigo = ?, nombre = ?, apellidos = ?, correo = ?, "
+                + "telefono = ?, direccion = ?" + (cambiaClave ? ", password_hash = ?" : "")
+                + " WHERE id_cliente = ?";
         try (Connection cn = Conexion.getConexion();
              PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setString(1, c.getNombre());
-            ps.setString(2, c.getApellidos());
-            ps.setString(3, c.getCorreo());
-            ps.setString(4, hashPassword(passwordPlano));
-            ps.setString(5, c.getTelefono());
-            ps.setString(6, c.getDireccion());
+            int i = 1;
+            ps.setString(i++, c.getCodigo());
+            ps.setString(i++, c.getNombre());
+            ps.setString(i++, c.getApellidos());
+            ps.setString(i++, c.getCorreo());
+            ps.setString(i++, c.getTelefono());
+            ps.setString(i++, c.getDireccion());
+            if (cambiaClave) {
+                ps.setString(i++, hashPassword(passwordNueva));
+            }
+            ps.setInt(i, c.getIdCliente());
+            ps.executeUpdate();
+        }
+    }
+
+    public void eliminar(int idCliente) throws SQLException {
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement("DELETE FROM cliente WHERE id_cliente = ?")) {
+            ps.setInt(1, idCliente);
             ps.executeUpdate();
         }
     }
 
     public List<Cliente> listar() throws SQLException {
-        String sql = "SELECT id_cliente, nombre, apellidos, correo, telefono, direccion, rol "
+        String sql = "SELECT id_cliente, codigo, nombre, apellidos, correo, telefono, direccion, rol "
                 + "FROM cliente ORDER BY id_cliente";
         List<Cliente> lista = new ArrayList<>();
         try (Connection cn = Conexion.getConexion();
@@ -48,7 +90,7 @@ public class ClienteDAO {
     // Devuelve el cliente si el correo y la contraseña son correctos; si no, null.
     // No distingue entre "correo no existe" y "contraseña mala" a propósito.
     public Cliente autenticar(String correo, String passwordPlano) throws SQLException {
-        String sql = "SELECT id_cliente, nombre, apellidos, correo, telefono, direccion, rol, password_hash "
+        String sql = "SELECT id_cliente, codigo, nombre, apellidos, correo, telefono, direccion, rol, password_hash "
                 + "FROM cliente WHERE correo = ?";
         try (Connection cn = Conexion.getConexion();
              PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -70,6 +112,7 @@ public class ClienteDAO {
                 rs.getString("correo"),
                 rs.getString("telefono"),
                 rs.getString("direccion"));
+        c.setCodigo(rs.getString("codigo"));
         c.setRol(rs.getString("rol"));
         return c;
     }

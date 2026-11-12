@@ -31,8 +31,8 @@
             <h2>Bienvenido a RICKZ</h2>
             <p>Plataforma inteligente para la gestión de restaurantes, menús digitales y pedidos personalizados.</p>
             <% if (esAdmin) { %>
-            <a href="adminProductos.jsp" class="btn-pill btn-claro">Ver productos</a>
-            <a href="adminUsuarios.jsp" class="btn-pill btn-borde">Ver usuarios</a>
+            <a href="listItems.jsp" class="btn-pill btn-claro">Ver productos</a>
+            <a href="listUsers.jsp" class="btn-pill btn-borde">Ver usuarios</a>
             <% } else { %>
             <a href="menu.jsp" class="btn-pill btn-claro">Ver menú</a>
             <% } %>
@@ -42,8 +42,9 @@
     <% if (esAdmin) { %>
     <section class="banda">
         <span class="banda-texto">Panel de administración</span>
-        <a href="registroUsuarios.jsp" class="btn-pill btn-claro">Registrar Cliente</a>
-        <a href="registroProductos.jsp" class="btn-pill btn-claro">Registrar Producto</a>
+        <a href="addUsers.jsp" class="btn-pill btn-claro">Registrar Cliente</a>
+        <a href="addItems.jsp" class="btn-pill btn-claro">Registrar Producto</a>
+        <a href="venta.jsp" class="btn-pill btn-claro">Registrar Venta</a>
     </section>
     <% } else { %>
     <section class="banda">

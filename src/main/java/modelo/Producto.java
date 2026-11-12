@@ -2,6 +2,7 @@ package modelo;
 
 public class Producto {
     private int idProducto;
+    private String codigo;
     private int idCategoria;
     private String nombreCategoria;
     private String nombre;
@@ -25,6 +26,9 @@ public class Producto {
 
     public int getIdProducto() { return idProducto; }
     public void setIdProducto(int idProducto) { this.idProducto = idProducto; }
+
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     public int getIdCategoria() { return idCategoria; }
     public void setIdCategoria(int idCategoria) { this.idCategoria = idCategoria; }

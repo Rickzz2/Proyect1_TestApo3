@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Cliente implements Serializable {
     private int idCliente;
+    private String codigo;
     private String nombre;
     private String apellidos;
     private String correo;
@@ -25,6 +26,9 @@ public class Cliente implements Serializable {
 
     public int getIdCliente() { return idCliente; }
     public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
+
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

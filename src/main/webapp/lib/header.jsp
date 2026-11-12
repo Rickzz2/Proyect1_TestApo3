@@ -23,8 +23,9 @@
             <li><a href="index.jsp">Inicio</a></li>
             <li><a href="menu.jsp">Menú</a></li>
             <% if (esAdminNav) { %>
-            <li><a href="adminUsuarios.jsp">Usuarios</a></li>
-            <li><a href="adminProductos.jsp">Productos</a></li>
+            <li><a href="listUsers.jsp">Usuarios</a></li>
+            <li><a href="listItems.jsp">Productos</a></li>
+            <li><a href="venta.jsp">Ventas</a></li>
             <% } %>
             <li><span style="color:#666;">Hola, <%= Texto.esc(usuarioNav.getNombre()) %></span></li>
             <li><a href="logout.jsp">Cerrar sesión</a></li>
