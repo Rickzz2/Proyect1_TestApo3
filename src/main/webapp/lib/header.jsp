@@ -10,10 +10,13 @@
     boolean esAdminNav = usuarioNav != null && usuarioNav.esAdmin();
 %>
 <header class="main-header">
-    <div class="logo-container">
-        <h1>RICKZ</h1>
-        <span>Plataforma de Gestión de Restaurantes</span>
-    </div>
+    <a href="index.jsp" class="logo-container">
+        <img src="images/logo-rickz.png" alt="RICKZ" class="logo-img">
+        <div class="logo-texto">
+            <h1>RICKZ</h1>
+            <span>Plataforma de Gestión de Restaurantes</span>
+        </div>
+    </a>
     <nav class="main-nav">
         <ul>
             <% if (usuarioNav == null) { %>
@@ -22,6 +25,10 @@
             <% } else { %>
             <li><a href="index.jsp">Inicio</a></li>
             <li><a href="menu.jsp">Menú</a></li>
+            <% if (!esAdminNav) { %>
+            <li><a href="pedido.jsp">Hacer pedido</a></li>
+            <li><a href="pedido.jsp#mis-pedidos">Mis pedidos</a></li>
+            <% } %>
             <% if (esAdminNav) { %>
             <li><a href="listUsers.jsp">Usuarios</a></li>
             <li><a href="listItems.jsp">Productos</a></li>

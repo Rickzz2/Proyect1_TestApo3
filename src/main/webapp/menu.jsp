@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RICKZ - Menú</title>
     <link rel="stylesheet" type="text/css" href="styles/styles.css?v=2">
-    <link rel="stylesheet" type="text/css" href="styles/extra.css?v=2">
+    <link rel="stylesheet" type="text/css" href="styles/extra.css?v=4">
 </head>
 <body>
     <%@include file="lib/header.jsp" %>
@@ -20,6 +20,8 @@
             e.printStackTrace();
             errorBd = "No se pudo cargar el menú. Revisa que SQL Server esté encendido y que la clave en db.properties sea correcta.";
         }
+        modelo.Cliente usuarioMenu = (modelo.Cliente) session.getAttribute("usuario");
+        boolean esAdminMenu = usuarioMenu != null && usuarioMenu.esAdmin();
         int disponibles = 0;
         if (productos != null) {
             for (Producto p : productos) {
@@ -31,6 +33,9 @@
     %>
     <section class="seccion">
         <h2>Nuestro menú</h2>
+        <% if (!esAdminMenu) { %>
+        <p class="menu-cta"><a href="pedido.jsp" class="btn">🛒 Hacer mi pedido</a></p>
+        <% } %>
         <% if (errorBd != null) { %>
         <p class="mensaje-error"><%= errorBd %></p>
         <% } else if (disponibles == 0) { %>

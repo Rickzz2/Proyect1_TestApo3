@@ -37,6 +37,16 @@ public class GestionarVenta {
         return new ArrayList<>(ventas);
     }
 
+    // Los pedidos de un solo cliente (lo que ve el cliente en "Mis pedidos").
+    public List<Venta> listarDeCliente(int idCliente) throws GestionException {
+        try {
+            return dao.listarPorCliente(idCliente);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GestionException("No se pudieron leer tus pedidos. Revisa que SQL Server esté encendido.", e);
+        }
+    }
+
     // cantidades: id_producto -> cantidad pedida (las de 0 o menos se ignoran).
     public int registrar(int idCliente, String tipoPedido, Map<Integer, Integer> cantidades) throws GestionException {
         if (idCliente <= 0) {

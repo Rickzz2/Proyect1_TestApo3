@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RICKZ - Crear cuenta</title>
     <link rel="stylesheet" type="text/css" href="styles/styles.css?v=2">
-    <link rel="stylesheet" type="text/css" href="styles/extra.css">
+    <link rel="stylesheet" type="text/css" href="styles/extra.css?v=4">
 </head>
 <body>
     <%
@@ -22,6 +22,7 @@
     %>
     <%@include file="lib/header.jsp" %>
     <div class="container auth-card">
+        <img src="images/logo-rickz.png" alt="Logo RICKZ" class="auth-logo auth-logo-sm">
         <h2>Crear cuenta</h2>
         <% if (mensajeError != null) { %>
         <p class="mensaje-error"><%= mensajeError %></p>

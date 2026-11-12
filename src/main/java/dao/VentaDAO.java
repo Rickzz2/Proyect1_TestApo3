@@ -128,14 +128,27 @@ public class VentaDAO {
 
     // Las últimas ventas, cada una con su detalle.
     public List<Venta> listar() throws SQLException {
+        return listar(null);
+    }
+
+    // Las últimas ventas de UN cliente (para la sección "Mis pedidos").
+    public List<Venta> listarPorCliente(int idCliente) throws SQLException {
+        return listar(idCliente);
+    }
+
+    private List<Venta> listar(Integer idCliente) throws SQLException {
         Map<Integer, Venta> porId = new LinkedHashMap<>();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String sql = "SELECT TOP 100 p.id_pedido, p.id_cliente, c.nombre, c.apellidos, p.fecha, p.estado, p.tipo_pedido, p.total "
                 + "FROM pedido p JOIN cliente c ON c.id_cliente = p.id_cliente "
+                + (idCliente == null ? "" : "WHERE p.id_cliente = ? ")
                 + "ORDER BY p.id_pedido DESC";
         try (Connection cn = Conexion.getConexion();
-             PreparedStatement ps = cn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            if (idCliente != null) {
+                ps.setInt(1, idCliente);
+            }
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Venta v = new Venta();
                 v.setIdVenta(rs.getInt("id_pedido"));
@@ -147,6 +160,7 @@ public class VentaDAO {
                 v.setTotal(rs.getBigDecimal("total").doubleValue());
                 porId.put(v.getIdVenta(), v);
             }
+            rs.close();
             if (porId.isEmpty()) {
                 return new ArrayList<>();
             }

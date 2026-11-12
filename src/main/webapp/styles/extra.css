@@ -199,3 +199,90 @@
     width: 90px;
     padding: 0.3rem;
 }
+
+/* ---------- Logo en el encabezado ---------- */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+}
+.logo-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+.logo-texto h1 { margin: 0; font-size: 1.6rem; color: #800000; letter-spacing: 1px; line-height: 1.1; }
+.logo-texto span { font-size: 0.75rem; color: #666; }
+.main-nav ul { flex-wrap: wrap; }
+
+/* ---------- Login / crear cuenta con logo ---------- */
+.auth-layout {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #fff5f0 0%, #f4f6f9 60%);
+}
+.auth-brand {
+    max-width: 380px;
+    text-align: center;
+}
+.auth-brand h2 { color: #800000; margin: 0.5rem 0; }
+.auth-brand p { color: #555; margin: 0 0 1.2rem; }
+.auth-logo { width: 260px; max-width: 70%; height: auto; display: block; margin: 0 auto; }
+.auth-logo-sm { width: 120px; margin-bottom: 0.5rem; }
+.auth-ventajas { list-style: none; margin: 0; padding: 0; text-align: left; }
+.auth-ventajas li {
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.6rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+.auth-ventajas li span { margin-right: 0.5rem; }
+.auth-layout .auth-card { margin: 0; width: 100%; max-width: 420px; }
+.auth-card h2 { margin-top: 0; color: #800000; text-align: center; }
+.auth-sub { text-align: center; color: #666; margin-top: -0.5rem; }
+.btn-block { width: 100%; padding: 0.8rem; font-weight: bold; }
+.btn-grande { padding: 0.9rem 1.8rem; font-size: 1.05rem; font-weight: bold; }
+.btn:disabled { background: #bbb; cursor: not-allowed; }
+
+/* ---------- Inicio del cliente ---------- */
+.pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; }
+.paso { background: #fff; border-radius: 12px; padding: 1.4rem; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+.paso h3 { margin: 0.6rem 0 0.3rem; color: #800000; }
+.paso p { margin: 0; color: #555; }
+.paso-num { width: 46px; height: 46px; line-height: 46px; border-radius: 50%; margin: 0 auto; background: #800000; color: #fff; font-weight: bold; font-size: 1.3rem; }
+.vacio-pedidos { background: #fff; border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+.pedidos-resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
+.pedido-card { background: #fff; border-radius: 12px; padding: 1.1rem; box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+.pedido-cab { display: flex; justify-content: space-between; align-items: center; }
+.pedido-fecha { color: #777; font-size: 0.85rem; margin: 0.3rem 0; }
+.pedido-card ul { margin: 0.4rem 0; padding-left: 1.1rem; }
+.pedido-total { text-align: right; font-weight: bold; color: #800000; font-size: 1.15rem; }
+.etiqueta { background: #fbe9e7; color: #800000; border-radius: 50px; padding: 0.15rem 0.7rem; font-size: 0.8rem; font-weight: bold; }
+
+/* ---------- Pedido del cliente ---------- */
+.menu-cta { text-align: center; margin: 0 0 1.2rem; }
+.selector-cantidad { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.8rem; }
+.selector-cantidad button {
+    width: 38px; height: 38px; border-radius: 50%; border: none;
+    background: #800000; color: #fff; font-size: 1.3rem; cursor: pointer;
+}
+.selector-cantidad button:hover { background: #b30000; }
+.selector-cantidad .campo-cantidad { width: 64px; text-align: center; font-size: 1.1rem; }
+.barra-pedido {
+    position: sticky; bottom: 0; z-index: 5;
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem;
+    margin-top: 1.5rem; padding: 1rem 1.2rem;
+    background: #fff7f7; border: 1px solid #e3b5b5; border-radius: 10px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+}
+.barra-tipo { margin: 0; min-width: 220px; }
+.barra-total { text-align: right; }
+.barra-total .total-venta { margin: 0; }
+#resumenItems { color: #666; font-size: 0.9rem; }
